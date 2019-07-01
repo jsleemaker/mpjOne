@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import Place from './Place';
 
 /*global kakao*/
-/*global map*/
 let x = 37.580517;
 let y = 126.887714;
 
@@ -27,61 +26,33 @@ class App extends Component {
   componentDidMount(){
     // 컴포넌트들이 다 자리 잡음
     console.log('did mount');
-    this._getMapInfo();
     this._getMapView();
+    // this._getMapInfo();
 
     
   }
-  _getMapInfo = async()=>{
+  _getMapInfo = async(map)=>{
+    console.log('1111111')
     const places = await this._callMapApi();
     this.setState({
       places
     })
     let positions =[];
-    this.state.places.forEach((item,index)=>{
+    this.state.places.forEach((item)=>{
       // console.log(item);
       positions.push({
         title:item.place_name,
-        latlng: new kakao.maps.LatLng(item.x, item.y)
+        latlng: new kakao.maps.LatLng(item.y, item.x)
       })
     })
-    console.log(positions)
-    this._makeMakers(positions);
+    this._makeMakers(map, positions);
     
      
     
   }
 
   
-  _makeMakers(positions){
-  //   console.log(positions);
-  // var mapContainer = document.getElementById('map'), // 지도를 표시할 div  
-  // mapOption = { 
-  //     center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-  //     level: 3 // 지도의 확대 레벨
-  // };
-
-  // var map = new kakao.maps.Map(mapContainer,mapOption); // 지도를 생성합니다
-// // 마커를 표시할 위치와 title 객체 배열입니다 
-//   var positions = [
-//     {
-//         title: '카카오', 
-//         latlng: new kakao.maps.LatLng(37.5557996323443,126.970416345049)
-//     },
-//     {
-//         title: '생태연못', 
-//         latlng: new kakao.maps.LatLng(33.450936, 126.569477)
-//     },
-//     {
-//         title: '텃밭', 
-//         latlng: new kakao.maps.LatLng(33.450879, 126.569940)
-//     },
-//     {
-//         title: '근린공원',
-//         latlng: new kakao.maps.LatLng(33.451393, 126.570738)
-//     }
-//   ];
-  console.log(positions)
+  _makeMakers(map, positions){
     // 마커 이미지의 이미지 주소입니다
     const imageSrc = "http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png"; 
         
@@ -99,7 +70,6 @@ class App extends Component {
           title : positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
           image : markerImage // 마커 이미지 
       });
-
       marker.setMap(map);
     }  
   }
@@ -121,7 +91,6 @@ class App extends Component {
 
   state = {
     greeting : 'Hello',
-    // movies: []
     
   }
   _getMapView(){
@@ -133,23 +102,27 @@ class App extends Component {
 
     const map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
 
-    kakao.maps.event.addListener(map, 'center_changed', function() {
+    const mapDraw = this._getMapInfo();
+
+    kakao.maps.event.addListener(map, 'dragend', function(mapDraw) {
 
       // 지도의  레벨을 얻어옵니다
-      // var level = map.getLevel();
+      var level = map.getLevel();
   
       // 지도의 중심좌표를 얻어옵니다 
       var latlng = map.getCenter(); 
   
-      // var message = '<p>지도 레벨은 ' + level + ' 이고</p>';
-      // message += '<p>중심 좌표는 위도 ' + latlng.getLat() + ', 경도 ' + latlng.getLng() + '입니다</p>';
+      var message = '<p>지도 레벨은 ' + level + ' 이고</p>';
+      message += '<p>중심 좌표는 위도 ' + latlng.getLat() + ', 경도 ' + latlng.getLng() + '입니다</p>';
   
-      // console.log(message);
+      console.log(message);
       x = latlng.getLat();
       y = latlng.getLng();
-  
-      // this._getMapInfo();
+      
+
     });
+    console.log(this)
+    this._getMapInfo(map);
   }
 
   
@@ -166,7 +139,6 @@ class App extends Component {
         place_url={place.place_url} />
     })
 
-    console.log('check')
     return places
   }
 
