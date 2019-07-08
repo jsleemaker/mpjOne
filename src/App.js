@@ -54,8 +54,18 @@ class App extends Component {
     };
     
     const map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
-   
     
+    // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
+    var mapTypeControl = new kakao.maps.MapTypeControl();
+
+    // 지도에 컨트롤을 추가해야 지도위에 표시됩니다
+    // kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
+    map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+
+    // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+    var zoomControl = new kakao.maps.ZoomControl();
+    map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
     kakao.maps.event.addListener(map, 'dragend', ()=>{
       
       // 지도의  레벨을 얻어옵니다
@@ -109,9 +119,11 @@ class App extends Component {
     })
     let positions =[];
     this.state.places.forEach((item)=>{
-      // console.log(item);
+      //console.log("place_name "+item.place_name);
+      //console.log("url "+item.place_url);
       positions.push({
         title:item.place_name,
+        url:item.place_url,
         latlng: new kakao.maps.LatLng(item.y, item.x)
       })
     })
@@ -145,16 +157,37 @@ class App extends Component {
       
       // 마커 이미지를 생성합니다    
       var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
-
+      
       // 마커를 생성합니다
       var marker = new kakao.maps.Marker({
-          map: map, // 마커를 표시할 지도
-          position: positions[i].latlng, // 마커를 표시할 위치
-          title : positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-          image : markerImage // 마커 이미지 
+        map: map, // 마커를 표시할 지도
+        position: positions[i].latlng, // 마커를 표시할 위치
+        title : positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+        image : markerImage // 마커 이미지 
       });
       marker.setMap(map);
       markers.push(marker);
+      //console.log("positions[i] "+positions[i].url);
+      
+      // 커스텀 오버레이에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+      //var content = '<div class ="label"><span class="left"></span><span class="center">'+positions[i].title+'</span><span class="right"></span></div>';
+      var content = '<div class="customoverlay">' +
+    '  <a href="'+positions[i].url+'" target="_blank">' +
+    '    <span class="title">'+positions[i].title+'</span>' +
+    '  </a>' +
+    '</div>';
+    
+      // 커스텀 오버레이가 표시될 위치입니다 
+      //let position = new kakao.maps.LatLng(37.54699, 127.09598);  
+
+      // 커스텀 오버레이를 생성합니다
+      var customOverlay = new kakao.maps.CustomOverlay({
+          map: map,
+          position: positions[i].latlng,
+          content: content,
+          yAnchor: 3 
+      });
+      customOverlay.setMap(map);
     }  
   }
 
