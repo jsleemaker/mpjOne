@@ -6,6 +6,7 @@ let x = 36.332223;
 let y = 127.433706;
 
 let markers = [];
+let customOverlaies = [];
 
 
 
@@ -18,13 +19,12 @@ class App extends Component {
     // 사이클의 시작
     // api등 원천 데이터 획득 작업 등
     console.log('will mount');
-    
+    this._getCode();
     
   }
   
   componentDidMount= ()=>{
     // 컴포넌트들이 다 자리 잡음
-    
     this._getLocation();
     // this._getMapView();
     console.log('did mount');
@@ -34,17 +34,33 @@ class App extends Component {
     // 컴포넌트가 리액트 세계에 존재
     console.log('did render');
     const {places} = this.state;
-    // const {map} = this.state;
   
     return (
       <div>
         <div id="map"></div>
+        <div>
+          <a id="kakao-login-btn"></a>
+          <a href="http://developers.kakao.com/logout"></a>
+        </div>
         <div className={places ? "Place":"Place--loading"}>
           {places ? this._renderPlaces() : 'Loading'}
         </div>
       </div>
     );
   }
+
+  _getCode(){
+    const headers = {
+      'Authorization': 'KakaoAK 90c02250ba7baedbd7e0c3a29aa5d21c'
+  };
+
+
+  const url= 'https://kauth.kakao.com/oauth/token/oauth/authorize?client_id=90c02250ba7baedbd7e0c3a29aa5d21c&redirect_uri=http://localhost:3000/oauth&response_type=code';
+  return fetch(url)
+  .then(potato => console.log(potato))
+  .catch(err=> console.log(err))
+  }
+
 
   _getMapView(){
     const container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
@@ -80,8 +96,6 @@ class App extends Component {
       console.log(message);
       x = latlng.getLat();
       y = latlng.getLng();
-      // console.log(getM._getMapInfo(map));
-      // console.log(temp._getMapInfo(map));
       this._getMapInfo(map);
     });
     
@@ -99,7 +113,10 @@ class App extends Component {
           console.log(position.coords.latitude + ' ' + position.coords.longitude);
           this._getMapView();
         },(error)=> {
+          alert('접속기기의 GPS를 켜주세요!');
           console.error(error);
+          this._getMapView();
+
         }, {
           enableHighAccuracy: false,
           maximumAge: 0,
@@ -107,6 +124,7 @@ class App extends Component {
         });
       } else {
         alert('GPS를 지원하지 않습니다');
+        this._getMapView();
       }
 
 
@@ -119,8 +137,6 @@ class App extends Component {
     })
     let positions =[];
     this.state.places.forEach((item)=>{
-      //console.log("place_name "+item.place_name);
-      //console.log("url "+item.place_url);
       positions.push({
         title:item.place_name,
         url:item.place_url,
@@ -131,7 +147,6 @@ class App extends Component {
   }
 
   _callMapApi= ()=>{
-    // const sort = 'distance';
     const headers = {
         'Authorization': 'KakaoAK 90c02250ba7baedbd7e0c3a29aa5d21c'
     };
@@ -167,19 +182,14 @@ class App extends Component {
       });
       marker.setMap(map);
       markers.push(marker);
-      //console.log("positions[i] "+positions[i].url);
       
       // 커스텀 오버레이에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-      //var content = '<div class ="label"><span class="left"></span><span class="center">'+positions[i].title+'</span><span class="right"></span></div>';
       var content = '<div class="customoverlay">' +
     '  <a href="'+positions[i].url+'" target="_blank">' +
     '    <span class="title">'+positions[i].title+'</span>' +
     '  </a>' +
     '</div>';
     
-      // 커스텀 오버레이가 표시될 위치입니다 
-      //let position = new kakao.maps.LatLng(37.54699, 127.09598);  
-
       // 커스텀 오버레이를 생성합니다
       var customOverlay = new kakao.maps.CustomOverlay({
           map: map,
@@ -188,6 +198,7 @@ class App extends Component {
           yAnchor: 3 
       });
       customOverlay.setMap(map);
+      customOverlaies.push(customOverlay);
     }  
   }
 
@@ -201,7 +212,10 @@ class App extends Component {
   _setMarkers(map) {
     for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(map);
-    }            
+    }  
+    for (var i = 0; i < customOverlaies.length; i++) {
+      customOverlaies[i].setMap(map);
+    }          
   }
 
 
@@ -225,13 +239,6 @@ class App extends Component {
     
     return places
   }
-  
-
-
-
-
-
-
 
 }
 
