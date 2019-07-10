@@ -38,7 +38,7 @@
 }
 .customoverlay::after{
   content:""; position: absolute; left:50%; bottom:-20px; border-color:#ffffff transparent transparent transparent;
-  display:inline-block; width:0; height:0; border-style:solid; border-width:10px; margin-left:-10px; box-shadow:0px 1px 1px rgba(0,0,0,0.1);
+  display:inline-block; width:0; height:0; border-style:solid; border-width:10px; margin-left:-10px; 
 }
 .customoverlay a{
   font-size:13px; text-decoration: none;
