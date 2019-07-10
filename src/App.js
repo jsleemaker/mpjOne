@@ -83,6 +83,10 @@ class App extends Component {
     var zoomControl = new kakao.maps.ZoomControl();
     map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
+    // 버튼 클릭에 따라 지도 확대, 축소 기능을 막거나 풀고 싶은 경우에는 map.setZoomable 함수를 사용합니다
+    map.setZoomable(false);    
+    
+
     kakao.maps.event.addListener(map, 'dragend', ()=>{
       
       // 지도의  레벨을 얻어옵니다

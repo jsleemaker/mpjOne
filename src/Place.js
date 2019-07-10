@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import './Place.css';
 
 Place.propTypes ={
-    place_name: PropTypes.string,
-    key: PropTypes.string,
+    place_name: PropTypes.string.isRequired,
+    key: PropTypes.string.isRequired,
     phone: PropTypes.string,
     road_address: PropTypes.string,
-    address: PropTypes.string,
+    address: PropTypes.string.isRequired,
     x: PropTypes.string,
     y: PropTypes.string,
     place_url: PropTypes.string
