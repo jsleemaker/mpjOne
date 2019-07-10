@@ -168,7 +168,7 @@ class App extends Component {
 
   _makeMakers(map, positions){
     // 마커 이미지의 이미지 주소입니다
-    const imageSrc = "http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png"; 
+    const imageSrc = '/img/marker.svg';
         
     this._hideMarkers();
     for (var i = 0; i < positions.length; i ++) {
