@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Place from './Place';
+import './App.css';
 
 /*global kakao*/
 let x = 36.332223;

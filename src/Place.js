@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import './Place.css';
 
 Place.propTypes ={
     place_name: PropTypes.string,
@@ -17,17 +18,13 @@ function Place({place_name, key, phone, road_address, address, x, y, place_url})
             <div className="Place__Columns">
                 {/* <MoviePoster poster={poster} alt={title}/> */}
             </div>
-            <div className="Place__Columns">
-                <h1>{place_name}</h1>
-                <h1>{key}</h1>
-                <h1>{phone}</h1>
-                <h1>{road_address}</h1>
-                <h1>{address}</h1>
-                <h1>{x}</h1>
-                <h1>{y}</h1>
-                <h1>{place_url}</h1>
-
-               
+            <div id="{key}" className="list_wrap">
+                <dl className="list_box">
+                    <dt className="title">{place_name}</dt>
+                    <dd className="tel">{phone}</dd>
+                    <dd className="addr">도로명 : {road_address}</dd>
+                    <dd className="addr">지번명 : {address}</dd>
+                </dl>
             </div>
         </div>
     )
