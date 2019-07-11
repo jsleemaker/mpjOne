@@ -4,8 +4,6 @@ import './Menu.css';
 /*global Kakao*/
 
 class Menu extends Component {
-    
-
       handleClick() {
         this._getLoginWindow();
       }
@@ -18,6 +16,7 @@ class Menu extends Component {
     // api등 원천 데이터 획득 작업 등
     console.log('will mount');
     // this._getCode();
+    this._kakaoInit();
     
   }
   
@@ -34,7 +33,7 @@ class Menu extends Component {
     return (
       <div>
         <div id="menu">
-            <img onClick={this.handleClick.bind(this)} id="custom-login-btn" src="//mud-kage.kakao.com/14/dn/btqbjxsO6vP/KPiGpdnsubSq3a0PHEGUK1/o.jpg" width="300"/>
+            <img alt='kakaoLogin' onClick={this.handleClick.bind(this)} id="custom-login-btn" src="//mud-kage.kakao.com/14/dn/btqbjxsO6vP/KPiGpdnsubSq3a0PHEGUK1/o.jpg" width="300"/>
         </div>
       </div>
     );
@@ -58,10 +57,11 @@ class Menu extends Component {
   }
 
 
-
-  _getLoginWindow(){
+_kakaoInit(){
     // 사용할 앱의 JavaScript 키를 설정해 주세요.
     Kakao.init('90c02250ba7baedbd7e0c3a29aa5d21c');
+}
+  _getLoginWindow(){
     
     console.log('aaaaaaaaaaaa')
     // window.getElementById('custom-login-btn').on('click', ()=> {        
