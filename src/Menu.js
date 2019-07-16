@@ -59,19 +59,20 @@ class Menu extends Component {
 
 _kakaoInit(){
     // 사용할 앱의 JavaScript 키를 설정해 주세요.
-    Kakao.init('90c02250ba7baedbd7e0c3a29aa5d21c');
+    Kakao.init('ae78a84165c98b05e96635edb81d0143');
 }
   _getLoginWindow(){
     
-    console.log('aaaaaaaaaaaa')
-    // window.getElementById('custom-login-btn').on('click', ()=> {        
+    // window.getElementById('custom-login-btn').on('click', ()=> {  
         // 로그인 창을 띄웁니다.
         Kakao.Auth.login({
-        success: function(authObj) {
+        success: (authObj)=> {
             alert(JSON.stringify(authObj));
+            console.log('로그인성공: ' + authObj)
         },
         fail: function(err) {
             alert(JSON.stringify(err));
+            console.log('로그인실패: ' + err)
         }
         });
     // });
