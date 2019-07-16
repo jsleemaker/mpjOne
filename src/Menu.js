@@ -67,12 +67,39 @@ _kakaoInit(){
         // 로그인 창을 띄웁니다.
         Kakao.Auth.login({
         success: (authObj)=> {
-            alert(JSON.stringify(authObj));
-            console.log('로그인성공: ' + authObj)
+            console.log('로그인성공: ' + JSON.stringify(authObj));
+
+            Kakao.Auth.setAccessToken(JSON.stringify(authObj).access_token);
+
+
+            var request = require('request');
+
+            const headers = {
+                'Authorization': 'Bearer '+JSON.stringify(authObj).access_token
+            };
+            
+            const options = {
+                url: 'https://kapi.kakao.com/v2/user/me',
+                headers: headers
+            };
+            
+            function callback(error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    console.log(body);
+                }
+            }
+            
+            request(options, callback);
+            
+
+
+
+
+
         },
         fail: function(err) {
             alert(JSON.stringify(err));
-            console.log('로그인실패: ' + err)
+            console.log('로그인실패: ' +  JSON.stringify(err))
         }
         });
     // });
