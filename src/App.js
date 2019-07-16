@@ -31,6 +31,9 @@ class App extends Component {
     console.log('did mount');
   }
   
+
+
+  
   render(){
     // 컴포넌트가 리액트 세계에 존재
     console.log('did render');
@@ -46,9 +49,41 @@ class App extends Component {
         <div className={places ? "Place":"Place--loading"}>
           {places ? this._renderPlaces() : 'Loading'}
         </div>
+        <button onClick={this.search()} id="btnSearch" >            
+         </button>
+         <div class='searchBox' id='searchBox' ref='searchBox'>
+            <div>
+              <input type="text" name="schkey" value={this.state.schkey}/>
+            </div>
+             
+              <button onClick={this.searchClose()} id="searchClose">
+                 &times;
+              </button>
+            
+         </div>
       </div>
+
+      
+
     );
   }
+
+  search() {
+     return function() {
+      document.getElementById('searchBox').style.display="block";
+     }
+    }
+  searchClose(){
+    return function() {
+        document.getElementById('searchBox').style.display="none";
+       }
+      
+  }
+
+    
+     
+     
+  
 
   _getCode(){
     const headers = {
@@ -157,7 +192,7 @@ class App extends Component {
     };
 
 
-    const url= 'https://dapi.kakao.com/v2/local/search/keyword.json?query=세차&x='+y+'&y='+x+'&sort=distance&radius=20000';
+    const url= 'https://dapi.kakao.com/v2/local/search/keyword.json?query=스타벅스&x='+y+'&y='+x+'&sort=distance&radius=20000';
     return fetch(url, {
       headers: headers
     })
@@ -168,7 +203,7 @@ class App extends Component {
 
   _makeMakers(map, positions){
     // 마커 이미지의 이미지 주소입니다
-    const imageSrc = '/img/marker.svg';
+    const imageSrc = "http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png"; 
         
     this._hideMarkers();
     for (var i = 0; i < positions.length; i ++) {
