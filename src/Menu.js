@@ -59,19 +59,47 @@ class Menu extends Component {
 
 _kakaoInit(){
     // 사용할 앱의 JavaScript 키를 설정해 주세요.
-    Kakao.init('90c02250ba7baedbd7e0c3a29aa5d21c');
+    Kakao.init('ae78a84165c98b05e96635edb81d0143');
 }
   _getLoginWindow(){
     
-    console.log('aaaaaaaaaaaa')
-    // window.getElementById('custom-login-btn').on('click', ()=> {        
+    // window.getElementById('custom-login-btn').on('click', ()=> {  
         // 로그인 창을 띄웁니다.
         Kakao.Auth.login({
-        success: function(authObj) {
-            alert(JSON.stringify(authObj));
+        success: (authObj)=> {
+            console.log('로그인성공: ' + JSON.stringify(authObj));
+
+            Kakao.Auth.setAccessToken(JSON.stringify(authObj).access_token);
+
+
+            var request = require('request');
+
+            const headers = {
+                'Authorization': 'Bearer '+JSON.stringify(authObj).access_token
+            };
+            
+            const options = {
+                url: 'https://kapi.kakao.com/v2/user/me',
+                headers: headers
+            };
+            
+            function callback(error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    console.log(body);
+                }
+            }
+            
+            request(options, callback);
+            
+
+
+
+
+
         },
         fail: function(err) {
             alert(JSON.stringify(err));
+            console.log('로그인실패: ' +  JSON.stringify(err))
         }
         });
     // });
