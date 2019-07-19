@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Place from './Place';
 import './App.css';
+import { async } from 'q';
 
 /*global kakao*/
 let x = 36.332223;
@@ -29,6 +30,9 @@ class App extends Component {
     this._getLocation();
     // this._getMapView();
     console.log('did mount');
+
+
+
   }
   
 
@@ -53,10 +57,11 @@ class App extends Component {
          </button>
          <div class='searchBox' id='searchBox' ref='searchBox'>
             <div>
-              <input type="text" name="schkey" value={this.state.schkey}/>
+              <input type="text" name="schkey" value={this.state.schkey} onChange={this.handleChange}/>
+                <button onClick={this.getScTitle()} id="getTitle"> SC </button>
             </div>
              
-              <button onClick={this.searchClose()} id="searchClose">
+              <button onClick={this._searchClose()} id="searchClose">
                  &times;
               </button>
             
@@ -73,28 +78,64 @@ class App extends Component {
       document.getElementById('searchBox').style.display="block";
      }
     }
-  searchClose(){
-    return function() {
-        document.getElementById('searchBox').style.display="none";
+  _searchClose=()=>{
+    return ()=> {
+      //alert("aaa");
+        window.document.getElementById('searchBox').style.display="none";
        }
       
   }
 
+ getScTitle=()=>{
+
     
+    //render(){
+    return  ()=> {
+       alert(this.state.schkey);
+       //alert("kkk");
+       //this._callMapApiSc(this.state.schkey);
+       
+       
+       this._hideMarkers();
+       //this._searchClose();
+
+      //  const places = await this._callMapApiSc(this.state.schkey);
+      //   this.setState({
+      //     places
+      //   })
+      //   let positions =[];
+      //   this.state.places.forEach((item)=>{
+      //     positions.push({
+      //       title:item.place_name,
+      //       url:item.place_url,
+      //       latlng: new kakao.maps.LatLng(item.y, item.x)
+      //     })
+      //   })
+        //.this._makeMakers(map, positions);
+
+    }
+  //}
+  }
+
+
+
+   handleChange=(e)=>{
+     this.setState({schkey:e.target.value})
+   } 
      
      
   
 
   _getCode(){
-    const headers = {
-      'Authorization': 'KakaoAK 90c02250ba7baedbd7e0c3a29aa5d21c'
-  };
+        const headers = {
+          'Authorization': 'KakaoAK 90c02250ba7baedbd7e0c3a29aa5d21c'
+      };
+      
 
-
-  const url= 'https://kauth.kakao.com/oauth/token/oauth/authorize?client_id=90c02250ba7baedbd7e0c3a29aa5d21c&redirect_uri=http://localhost:3000/oauth&response_type=code';
-  return fetch(url)
-  .then(potato => console.log(potato))
-  .catch(err=> console.log(err))
+      const url= 'https://kauth.kakao.com/oauth/token/oauth/authorize?client_id=90c02250ba7baedbd7e0c3a29aa5d21c&redirect_uri=http://localhost:3000/oauth&response_type=code';
+      return fetch(url)
+      .then(potato => console.log(potato))
+      .catch(err=> console.log(err))
   }
 
 
@@ -193,6 +234,22 @@ class App extends Component {
 
 
     const url= 'https://dapi.kakao.com/v2/local/search/keyword.json?query=스타벅스&x='+y+'&y='+x+'&sort=distance&radius=20000';
+    return fetch(url, {
+      headers: headers
+    })
+    .then(potato => potato.json())
+    .then(json =>json.documents)
+    .catch(err=> console.log(err))
+  }  
+
+  _callMapApiSc= (sckey)=>{
+
+    const headers = {
+        'Authorization': 'KakaoAK 90c02250ba7baedbd7e0c3a29aa5d21c'
+    };
+
+
+    const url= 'https://dapi.kakao.com/v2/local/search/keyword.json?query='+sckey+'&x='+y+'&y='+x+'&sort=distance&radius=20000';
     return fetch(url, {
       headers: headers
     })
