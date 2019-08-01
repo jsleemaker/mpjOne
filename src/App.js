@@ -76,7 +76,9 @@ class App extends Component {
   search() {
      return function() {
       document.getElementById('searchBox').style.display="block";
+      
      }
+     this.searchBox.value = null;
     }
   _searchClose=()=>{
     return ()=> {
@@ -91,14 +93,18 @@ class App extends Component {
     
     //render(){
     return  ()=> {
-       alert(this.state.schkey);
+       //alert(this.state.schkey);
        //alert("kkk");
+       
+       this.setState({schkey:''})
+       
+       //this._hideMarkers();
+       
+       
        //this._callMapApiSc(this.state.schkey);
-       
-       
-       this._hideMarkers();
+       this._getMapView(this.state.schkey);
        //this._searchClose();
-
+       document.getElementById('searchBox').style.display="none";
       //  const places = await this._callMapApiSc(this.state.schkey);
       //   this.setState({
       //     places
@@ -111,7 +117,7 @@ class App extends Component {
       //       latlng: new kakao.maps.LatLng(item.y, item.x)
       //     })
       //   })
-        //.this._makeMakers(map, positions);
+      //this._makeMakers(map, positions);
 
     }
   //}
@@ -139,7 +145,7 @@ class App extends Component {
   }
 
 
-  _getMapView(){
+  _getMapView(scvalue){
     const container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
     const options = { //지도를 생성할 때 필요한 기본 옵션
       center: new kakao.maps.LatLng(x, y), //지도의 중심좌표.
@@ -177,11 +183,11 @@ class App extends Component {
       console.log(message);
       x = latlng.getLat();
       y = latlng.getLng();
-      this._getMapInfo(map);
+      this._getMapInfo(map,scvalue);
     });
     
     
-    this._getMapInfo(map);
+    this._getMapInfo(map,scvalue);
   }
   
   _getLocation = ()=> {
@@ -211,8 +217,8 @@ class App extends Component {
 
   }
 
-  _getMapInfo = async(map)=>{
-    const places = await this._callMapApi();
+  _getMapInfo = async(map,scvalue)=>{
+    const places = await this._callMapApi(scvalue);
     this.setState({
       places
     })
@@ -227,13 +233,13 @@ class App extends Component {
     this._makeMakers(map, positions);
   }
 
-  _callMapApi= ()=>{
+  _callMapApi= (scvalue)=>{
     const headers = {
         'Authorization': 'KakaoAK 90c02250ba7baedbd7e0c3a29aa5d21c'
     };
 
 
-    const url= 'https://dapi.kakao.com/v2/local/search/keyword.json?query=스타벅스&x='+y+'&y='+x+'&sort=distance&radius=20000';
+    const url= 'https://dapi.kakao.com/v2/local/search/keyword.json?query='+scvalue+'&x='+y+'&y='+x+'&sort=distance&radius=20000';
     return fetch(url, {
       headers: headers
     })
@@ -243,6 +249,8 @@ class App extends Component {
   }  
 
   _callMapApiSc= (sckey)=>{
+
+    alert('속으로'+this.state.schkey);
 
     const headers = {
         'Authorization': 'KakaoAK 90c02250ba7baedbd7e0c3a29aa5d21c'
@@ -256,6 +264,8 @@ class App extends Component {
     .then(potato => potato.json())
     .then(json =>json.documents)
     .catch(err=> console.log(err))
+
+    
   }
 
   _makeMakers(map, positions){
